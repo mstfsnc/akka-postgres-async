@@ -3,11 +3,11 @@ package dev.sancu.controllers
 import dev.sancu.models.JsonSupport
 import dev.sancu.services.UserService
 import dev.sancu.models.CreateOrUpdateUser
+import scala.concurrent.ExecutionContext
+import scala.util.{Failure, Success}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server
 import akka.http.scaladsl.server.Directives
-import scala.concurrent.ExecutionContext
-import scala.util.{Failure, Success}
 
 class UserController(userService: UserService)(implicit ec: ExecutionContext) extends Directives with JsonSupport {
   val routes: server.Route = {
