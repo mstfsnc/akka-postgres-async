@@ -10,14 +10,16 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import com.typesafe.config.ConfigFactory
 import io.getquill.{PostgresAsyncContext, SnakeCase}
 
 object Boot extends App {
-  implicit val system: ActorSystem[Any] = ActorSystem(Behaviors.empty, "App")
+  val config = ConfigFactory.load()
+
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "App")
   implicit val ec: ExecutionContext = system.executionContext
   implicit lazy val postgresAsyncCtx: PostgresAsyncContext[SnakeCase.type] = new PostgresAsyncContext(SnakeCase, "db")
-  implicit lazy val solrAsyncClient: SolrAsyncClient = new SolrAsyncClient("http://0.0.0.0:8983/solr")
-
+  implicit lazy val solrAsyncClient: SolrAsyncClient = new SolrAsyncClient(config.getString("solr.url"))
 
   val userController = new UserController(new UserService())
   val productController = new ProductController(new ProductService())
